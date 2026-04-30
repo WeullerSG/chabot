@@ -1,26 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
-const DEFAULT_SYSTEM =
-  "Você é um assistente de e-commerce simpático. Ajude com dúvidas sobre pedidos, produtos e pagamentos. Seja direto e objetivo.";
-
-const PRESETS = [
-  {
-    label: "E-commerce",
-    prompt:
-      "Você é um assistente de e-commerce simpático. Ajude com dúvidas sobre pedidos, produtos e pagamentos. Seja direto e objetivo.",
-  },
-  {
-    label: "Suporte Técnico",
-    prompt:
-      "Você é um especialista em suporte técnico. Resolva problemas de forma clara, pedindo informações quando necessário.",
-  },
-  {
-    label: "Atendimento Bancário",
-    prompt:
-      "Você é um assistente bancário. Responda dúvidas sobre conta, cartão e transferências com segurança e clareza.",
-  },
-  { label: "Livre", prompt: "" },
-];
+import { DEFAULT_SYSTEM, PRESETS } from "./sistemPrompt";
 
 async function callGroq(messages, systemPrompt) {
   const formattedMessages = [
@@ -49,9 +28,6 @@ async function callGroq(messages, systemPrompt) {
 
   const data = await res.json();
 
-  console.log("STATUS:", res.status);
-  console.log("RESPOSTA COMPLETA:", data);
-
   if (!res.ok) {
     throw new Error(data.error?.message || "Erro na API");
   }
@@ -59,7 +35,6 @@ async function callGroq(messages, systemPrompt) {
   return data.choices?.[0]?.message?.content || "Sem resposta";
 }
 
-console.log("KEY:", import.meta.env.VITE_GROQ_API_KEY);
 function Avatar({ role }) {
   if (role === "user") {
     return (
