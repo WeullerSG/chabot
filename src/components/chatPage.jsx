@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { DEFAULT_SYSTEM, PRESETS } from "./sistemPrompt";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 async function callGroq(messages, systemPrompt) {
   const formattedMessages = [
@@ -147,11 +149,14 @@ function TypingIndicator() {
 }
 
 export default function ChatbotAtividade() {
+  const savedPrompt = useQuery(api["model/systemPrompt/queries"].getSystemPrompt);
+  console.log("🚀 ~ ChatbotAtividade ~ savedPrompt:", savedPrompt)
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [systemPrompt, setSystemPrompt] = useState(DEFAULT_SYSTEM);
   const [activePreset, setActivePreset] = useState(0);
+
   const [showConfig, setShowConfig] = useState(false);
   const [started, setStarted] = useState(false);
   const bottomRef = useRef(null);
@@ -180,7 +185,11 @@ export default function ChatbotAtividade() {
     setInput("");
     setLoading(true);
     try {
-      const reply = await callGroq(newMessages, systemPrompt);
+      const rules = savedPrompt?.systemPrompt;
+      const finalPrompt = rules
+        ? `${systemPrompt}\n\nRegras adicionais:\n${rules}`
+        : systemPrompt;
+      const reply = await callGroq(newMessages, finalPrompt);
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
     } catch {
       setMessages((prev) => [
@@ -209,7 +218,8 @@ export default function ChatbotAtividade() {
     return (
       <div
         style={{
-          minHeight: "100vh",
+          flex: 1,
+          overflowY: "auto",
           background: "#0F0D14",
           display: "flex",
           alignItems: "center",
@@ -347,8 +357,7 @@ export default function ChatbotAtividade() {
               textAlign: "center",
               marginTop: 16,
             }}
-          >
-          </p>
+          ></p>
         </div>
       </div>
     );
@@ -357,7 +366,8 @@ export default function ChatbotAtividade() {
   return (
     <div
       style={{
-        height: "100vh",
+        flex: 1,
+        overflow: "hidden",
         background: "#0F0D14",
         display: "flex",
         flexDirection: "column",
