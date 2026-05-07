@@ -27,7 +27,7 @@ export function SystemPromptForm({ defaultValue = "", existingId, onSubmit }) {
     if (existingId) {
       update({ id: existingId, systemPrompt: result.data.systemPrompt });
     } else {
-      create(result.data);
+      create({ systemPrompt: result.data.systemPrompt });
     }
     onSubmit?.(result.data.systemPrompt);
   }
