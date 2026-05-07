@@ -3,4 +3,5 @@ import { v } from "convex/values";
 
 export const systemPromptTable = defineTable({
     systemPrompt: v.string(),
+    userId: v.id("users"),
 });

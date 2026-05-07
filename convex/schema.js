@@ -11,5 +11,6 @@ export default defineSchema({
   }).index("by_user", ["userId"]),
   systemPrompts: defineTable({
     systemPrompt: v.string(),
-  }),
+    userId: v.id("users"),
+  }).index("by_user", ["userId"]),
 });
