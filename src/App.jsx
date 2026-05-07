@@ -1,7 +1,7 @@
-import ChatbotAtividade from "./components/chatPage";
-
+import Pages from "./Pages";
 function App() {
-  return (<ChatbotAtividade />)
+  return (<Pages />)
+  // return (<ChatbotAtividade />)
 }
 
 export default App;
